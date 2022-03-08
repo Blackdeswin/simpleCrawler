@@ -39,7 +39,10 @@ func getTitle(url string, wg *sync.WaitGroup, result *models.CrawlerResponse) {
 		case tt == html.TextToken:
 			t := tkn.Token()
 			if isTitle {
-				result.Items = append(result.Items, t.Data)
+				result.Items = append(result.Items, &models.CrawlerResponseItemsItems0{
+					URL:   &url,
+					Title: &t.Data,
+				})
 				return
 			}
 		}

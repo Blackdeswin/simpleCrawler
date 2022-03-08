@@ -60,7 +60,15 @@ definitions:
       items:
         type: array
         items:
-          type: string
+          type: object
+          required:
+            - url
+            - title
+          properties:
+            url:
+              type: string
+            title:
+              type: string
 
 parameters:
   CrawlerRequest:
