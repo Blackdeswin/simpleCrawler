@@ -1,9 +1,49 @@
 package crawler
 
-//import jsoniter "github.com/json-iterator/go"
+import (
+	"golang.org/x/net/html"
+	"net/http"
+	"simpleCrawler/internal/generated/models"
+	"sync"
+)
 
-//var json = jsoniter.ConfigFastest
+func GetURLTitles(urls []string) *models.CrawlerResponse {
+	wg := &sync.WaitGroup{}
+	var result models.CrawlerResponse
+	for _, url := range urls {
+		go func() {
+			wg.Add(1)
+			defer wg.Done()
+			getTitle(url, &result)
+		}()
+	}
+	wg.Wait()
+	return &result
+}
 
-func Crawler() {
+func getTitle(url string, result *models.CrawlerResponse) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
 
+	tkn := html.NewTokenizer(resp.Body)
+	var isTitle bool
+	for {
+		tt := tkn.Next()
+		switch {
+		case tt == html.ErrorToken:
+			return
+		case tt == html.StartTagToken:
+			t := tkn.Token()
+			isTitle = t.Data == "title"
+		case tt == html.TextToken:
+			t := tkn.Token()
+			if isTitle {
+				result.Items = append(result.Items, t.Data)
+				return
+			}
+		}
+	}
 }
