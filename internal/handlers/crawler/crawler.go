@@ -11,17 +11,15 @@ func GetURLTitles(urls []string) *models.CrawlerResponse {
 	wg := &sync.WaitGroup{}
 	var result models.CrawlerResponse
 	for _, url := range urls {
-		go func() {
-			wg.Add(1)
-			defer wg.Done()
-			getTitle(url, &result)
-		}()
+		wg.Add(1)
+		go getTitle(url, wg, &result)
 	}
 	wg.Wait()
 	return &result
 }
 
-func getTitle(url string, result *models.CrawlerResponse) {
+func getTitle(url string, wg *sync.WaitGroup, result *models.CrawlerResponse) {
+	defer wg.Done()
 	resp, err := http.Get(url)
 	if err != nil {
 		return
