@@ -7,7 +7,7 @@ import (
 
 	"simpleCrawler/internal/app"
 	"simpleCrawler/internal/config"
-	apiPosturLs "simpleCrawler/internal/generated/restapi/operations/post_u_r_ls"
+	apiPosturLs "simpleCrawler/internal/generated/restapi/operations/post_crawlers"
 
 	"github.com/go-openapi/loads"
 )
@@ -21,7 +21,7 @@ func main() {
 	srv := app.New()
 	api := operations.NewSimpleCrawlerAPI(swaggerSpec)
 
-	api.PosturLsPostURLsHandler = apiPosturLs.PostURLsHandlerFunc(srv.PostURLsHandler)
+	api.PostCrawlersPostCrawlersHandler = apiPosturLs.PostCrawlersHandlerFunc(srv.PostURLsHandler)
 	api.ServerShutdown = srv.OnShutdown
 	server := restapi.NewServer(api)
 	defer server.Shutdown()

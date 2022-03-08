@@ -16,8 +16,8 @@ paths:
   /urls:
     post:
       tags:
-        - PostURLs
-      operationId: PostURLs
+        - PostCrawlers
+      operationId: PostCrawlers
       description: ""
       parameters:
         - $ref: '#/parameters/CrawlerRequest'
